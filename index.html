@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>IA no más</title>
+    <style>
+      :root {
+        --pastel-red: #f8d7d7;
+        --pastel-red-deep: #f5a3a3;
+        --aquamarine: #9fe8dc;
+        --aquamarine-deep: #5bc0b3;
+        --white: #ffffff;
+        --soft-white: #fffaf9;
+        --text: #2d2d2d;
+        --muted: #475569;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar {
+        display: none;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, var(--pastel-red), var(--soft-white) 30%, var(--aquamarine));
+        color: var(--text);
+        overflow-x: hidden;
+        overflow-y: auto;
+        scroll-snap-type: y proximity;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .panel {
+        min-height: 100vh;
+        min-height: 100svh;
+        scroll-snap-align: start;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 1.5rem;
+      }
+
+      .panel-inner {
+        width: min(1200px, 100%);
+      }
+
+      .hero-section {
+        background: linear-gradient(135deg, var(--pastel-red), var(--soft-white) 30%, var(--aquamarine));
+      }
+
+      .soft-card,
+      .mini-card,
+      .image-card,
+      .cta-box {
+        background: rgba(255, 255, 255, 0.78);
+        border: 2px solid rgba(91, 192, 179, 0.28);
+        border-radius: 28px;
+        box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08);
+      }
+
+      .badge,
+      .eyebrow {
+        display: inline-block;
+        background: var(--aquamarine);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 0.45rem 0.9rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero {
+        position: relative;
+      }
+
+      .hero .panel-inner {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        align-items: center;
+        gap: 2.5rem;
+      }
+
+      .hero-copy {
+        background: rgba(255, 255, 255, 0.68);
+        border: 2px solid rgba(91, 192, 179, 0.35);
+        border-radius: 28px;
+        padding: clamp(2rem, 5vw, 4rem);
+        box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08);
+      }
+
+      .tag.is-soft {
+        background: var(--aquamarine);
+        color: var(--text);
+        border-radius: 999px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        line-height: 0.95;
+        color: #c96d6d;
+      }
+
+      h2 {
+        font-size: clamp(2.2rem, 4vw, 4rem);
+        line-height: 1.05;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .lead {
+        font-size: 1.12rem;
+        line-height: 1.7;
+        color: var(--muted);
+        max-width: 38rem;
+      }
+
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1.6rem;
+      }
+
+      .cta,
+      .secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        padding: 0.9rem 1.5rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: transform 0.2s ease;
+      }
+
+      .cta {
+        background: linear-gradient(135deg, var(--pastel-red-deep), #f7b8b8);
+        color: var(--white);
+        box-shadow: 0 12px 20px rgba(245, 163, 163, 0.3);
+      }
+
+      .secondary {
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px solid rgba(91, 192, 179, 0.4);
+        color: var(--text);
+      }
+
+      .cta:hover,
+      .secondary:hover {
+        transform: translateY(-2px);
+      }
+
+      .hero-visual {
+        position: relative;
+        min-height: 500px;
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+        border: 3px solid rgba(91, 192, 179, 0.35);
+      }
+
+      .hero-visual img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .floating-card {
+        position: absolute;
+        right: 1.2rem;
+        bottom: 1.2rem;
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(6px);
+        padding: 1rem 1.1rem;
+        border-radius: 18px;
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
+        max-width: 220px;
+      }
+
+      .floating-card strong {
+        display: block;
+        font-size: 1.6rem;
+        color: #c96d6d;
+        margin-bottom: 0.25rem;
+      }
+
+      .split {
+        background: rgba(255, 255, 255, 0.24);
+      }
+
+      .split .panel-inner {
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        align-items: center;
+        gap: 2.5rem;
+      }
+
+      .photo-frame {
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: 3px solid rgba(91, 192, 179, 0.2);
+      }
+
+      .photo-frame img {
+        width: 100%;
+        height: 560px;
+        object-fit: cover;
+      }
+
+      .copy-block {
+        padding: 1rem 0;
+      }
+
+      .copy-block p {
+        font-size: 1.08rem;
+        line-height: 1.8;
+        color: var(--muted);
+        max-width: 40rem;
+      }
+
+      .features {
+        background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0.45));
+      }
+
+      .features .panel-inner {
+        display: grid;
+        gap: 2rem;
+      }
+
+      .section-head {
+        text-align: center;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+
+      .section-head p {
+        color: var(--muted);
+        font-size: 1.06rem;
+        line-height: 1.7;
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.5rem;
+      }
+
+      .mini-card {
+        background: rgba(255, 255, 255, 0.75);
+        border: 2px solid rgba(91, 192, 179, 0.2);
+        border-radius: 22px;
+        padding: 1.5rem;
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.05);
+      }
+
+      .mini-card .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--pastel-red);
+        color: var(--text);
+        font-weight: 700;
+        margin-bottom: 0.9rem;
+      }
+
+      .mini-card h3 {
+        font-size: 1.4rem;
+        margin-bottom: 0.65rem;
+      }
+
+      .mini-card p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .highlight {
+        background: rgba(255, 255, 255, 0.7);
+      }
+
+      .highlight .panel-inner {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .large-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .large-copy h2 {
+        font-size: clamp(2.5rem, 4.2vw, 5rem);
+        line-height: 0.98;
+        max-width: 520px;
+      }
+
+      .gallery {
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .gallery .panel-inner {
+        display: grid;
+        gap: 2rem;
+      }
+
+      .image-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.4rem;
+      }
+
+      .image-card {
+        background: rgba(255, 255, 255, 0.75);
+        border: 2px solid rgba(91, 192, 179, 0.2);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.05);
+      }
+
+      .image-card img {
+        width: 100%;
+        height: 320px;
+        object-fit: cover;
+      }
+
+      .image-card .content {
+        padding: 1.2rem 1.1rem 1.5rem;
+      }
+
+      .image-card h3 {
+        margin-bottom: 0.5rem;
+        font-size: 1.3rem;
+      }
+
+      .image-card p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .cta-panel {
+        background: linear-gradient(135deg, rgba(248, 215, 215, 0.7), rgba(255,255,255,0.6) 35%, rgba(159, 232, 220, 0.7));
+      }
+
+      .contact-section {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .person-card {
+        background: rgba(255, 255, 255, 0.82);
+        border: 2px solid rgba(91, 192, 179, 0.22);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.06);
+        height: 100%;
+      }
+
+      .person-card .profile-top {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.2rem 1.2rem 0.5rem;
+      }
+
+      .person-photo {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid rgba(91, 192, 179, 0.3);
+      }
+
+      .person-card .meta {
+        min-width: 0;
+      }
+
+      .person-card .meta h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.1rem;
+      }
+
+      .person-card .meta p {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .person-card .body {
+        padding: 0.6rem 1.2rem 1.2rem;
+      }
+
+      .contact-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .contact-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.45rem 0;
+        color: var(--muted);
+        font-size: 0.93rem;
+      }
+
+      .contact-list .icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(159, 232, 220, 0.3);
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .digital-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(159, 232, 220, 0.32));
+        border: 2px solid rgba(91, 192, 179, 0.3);
+        border-radius: 28px;
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        height: 100%;
+      }
+
+      .digital-card .brand {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .digital-card .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--pastel-red-deep), var(--aquamarine));
+        color: var(--text);
+        font-weight: 800;
+      }
+
+      .digital-card .brand span {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .digital-card .person-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .digital-card .avatar {
+        width: 82px;
+        height: 82px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid rgba(255,255,255,0.7);
+      }
+
+      .digital-card .person-header h3 {
+        font-size: 1.4rem;
+        margin-bottom: 0.15rem;
+      }
+
+      .digital-card .person-header p {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .digital-card .info-stack {
+        margin-top: 1rem;
+      }
+
+      .digital-card .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.65rem 0;
+        border-top: 1px solid rgba(91, 192, 179, 0.2);
+        font-size: 0.92rem;
+      }
+
+      .digital-card .row strong {
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .digital-card .qr {
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(45deg, rgba(255,255,255,0.9) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.9) 75%),
+          linear-gradient(45deg, rgba(255,255,255,0.9) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.9) 75%);
+        background-size: 16px 16px;
+        background-position: 0 0, 8px 8px;
+        border-radius: 14px;
+        border: 2px solid rgba(91, 192, 179, 0.4);
+      }
+
+      .cta-box {
+        width: min(900px, 100%);
+        background: rgba(255, 255, 255, 0.85);
+        border: 3px solid rgba(91, 192, 179, 0.25);
+        border-radius: 30px;
+        padding: clamp(2rem, 5vw, 4rem);
+        text-align: center;
+        box-shadow: 0 24px 40px rgba(0, 0, 0, 0.08);
+      }
+
+      .cta-box p {
+        max-width: 700px;
+        margin: 0 auto 1.5rem;
+        font-size: 1.08rem;
+        line-height: 1.8;
+        color: var(--muted);
+      }
+
+      @media (max-width: 900px) {
+        .hero .panel-inner,
+        .split .panel-inner,
+        .highlight .panel-inner,
+        .card-grid,
+        .image-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-visual {
+          min-height: 420px;
+        }
+
+        .photo-frame img {
+          height: 420px;
+        }
+
+        .panel {
+          padding: 3rem 1.25rem;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .panel {
+          min-height: 100vh;
+          min-height: 100svh;
+          padding: 2rem 1rem;
+        }
+
+        .hero .panel-inner,
+        .split .panel-inner,
+        .highlight .panel-inner {
+          gap: 1.5rem;
+        }
+
+        .hero-copy,
+        .cta-box {
+          padding: 1.5rem;
+          border-radius: 22px;
+        }
+
+        .hero-visual {
+          min-height: 280px;
+          max-height: 55vh;
+        }
+
+        .hero-visual img {
+          height: 100%;
+          min-height: 280px;
+          object-fit: cover;
+        }
+
+        .photo-frame img {
+          height: auto;
+          aspect-ratio: 4 / 3;
+        }
+
+        .image-card img {
+          height: auto;
+          aspect-ratio: 4 / 3;
+        }
+
+        .cta-row > a {
+          flex: 1 1 100%;
+        }
+
+        .floating-card {
+          right: 0.75rem;
+          bottom: 0.75rem;
+          max-width: min(220px, calc(100% - 1.5rem));
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="./bulma/css/bulma.min.css">
+    <style>
+      .button.is-primary,
+      .button.is-primary:hover,
+      .button.is-primary:focus,
+      .button.is-primary:active {
+        background: linear-gradient(135deg, var(--pastel-red-deep), #f7b8b8);
+        border-color: transparent;
+        color: var(--white);
+        box-shadow: 0 12px 20px rgba(245, 163, 163, 0.28);
+      }
+
+      .button.is-light,
+      .button.is-light:hover,
+      .button.is-light:focus,
+      .button.is-light:active,
+      .secondary {
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px solid rgba(91, 192, 179, 0.4);
+        color: var(--text);
+      }
+
+      .button.is-primary.is-rounded,
+      .button.is-light.is-rounded,
+      .secondary {
+        border-radius: 999px;
+      }
+    </style>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <main>
+      <section class="section hero-section is-medium">
+        <div class="container">
+          <div class="columns is-vcentered is-variable is-6">
+            <div class="column is-6">
+              <div class="soft-card p-5 p-6-desktop has-background-white-bis">
+                <span class="tag is-soft is-medium">Nuevo</span>
+                <h1 class="title is-1 has-text-weight-bold has-text-primary-dark mt-4">IA no más</h1>
+                <p class="subtitle is-5 has-text-grey-dark mt-4 mb-5">Diseño simple, cálido y moderno con tonos pastel rojos, blancos y acuamarina, pensado para una experiencia clara y elegante por secciones.</p>
+                <div class="buttons are-medium">
+                  <a class="button is-primary is-rounded cta" href="#propuesta">Comenzar</a>
+                  <a class="button is-light is-rounded secondary" href="#beneficios">Ver más</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-6">
+              <div class="hero-visual">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80" alt="Personas trabajando" />
+                <div class="floating-card">
+                  <strong>+120%</strong>
+                  <span>claridad visual en cada paso</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section split" id="propuesta">
+        <div class="container">
+          <div class="columns is-vcentered is-variable is-6">
+            <div class="column is-5">
+              <div class="copy-block">
+                <span class="eyebrow">Propuesta</span>
+                <h2 class="title is-2 mt-4 mb-4">Una idea con<br />estructura clara</h2>
+                <p class="has-text-grey-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae fringilla tellus. Curabitur tempor scelerisque sapien, nec feugiat arcu venenatis non. Donec luctus massa sed justo dapibus, vitae pulvinar augue egestas.</p>
+              </div>
+            </div>
+
+            <div class="column is-7">
+              <div class="photo-frame">
+                <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80" alt="Espacio de trabajo moderno" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section features" id="beneficios">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Beneficios</span>
+            <h2 class="title is-2 mt-4 mb-4">Secciones útiles,<br />contenido pensado para cada momento</h2>
+            <p class="has-text-grey-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim erat at semper eleifend. Suspendisse potenti. Aenean feugiat nibh at justo eleifend, non convallis purus congue.</p>
+          </div>
+
+          <div class="columns is-variable is-5 mt-5">
+            <div class="column is-one-third">
+              <article class="box mini-card has-background-white-bis">
+                <div class="num">1</div>
+                <h3 class="title is-5">Concepto</h3>
+                <p class="has-text-grey-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et erat non ipsum varius accumsan.</p>
+              </article>
+            </div>
+
+            <div class="column is-one-third">
+              <article class="box mini-card has-background-white-bis">
+                <div class="num">2</div>
+                <h3 class="title is-5">Diseño</h3>
+                <p class="has-text-grey-dark">Praesent a mauris magna. Curabitur et dui sed nisl commodo interdum. Sed ultricies velit ut sem feugiat.</p>
+              </article>
+            </div>
+
+            <div class="column is-one-third">
+              <article class="box mini-card has-background-white-bis">
+                <div class="num">3</div>
+                <h3 class="title is-5">Resultado</h3>
+                <p class="has-text-grey-dark">Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; cras blandit.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section highlight">
+        <div class="container">
+          <div class="columns is-vcentered is-variable is-6">
+            <div class="column is-5">
+              <div class="large-copy">
+                <span class="eyebrow">Enfoque</span>
+                <h2 class="title is-2 mt-4 mb-0">Diseñamos<br />experiencias que<br />tienen sentido</h2>
+              </div>
+            </div>
+
+            <div class="column is-7">
+              <div class="copy-block">
+                <p class="has-text-grey-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ut turpis nec justo porttitor feugiat. Sed a ante porttitor, facilisis nisl non, posuere orci. Aliquam erat volutpat. Nulla facilisi. Integer pretium, quam in viverra fringilla, purus nibh cursus ipsum, nec interdum nunc velit et purus.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section gallery">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Galería</span>
+            <h2 class="title is-2 mt-4">Más secciones con contenido visual</h2>
+          </div>
+
+          <div class="columns is-variable is-5 mt-5">
+            <div class="column is-one-third">
+              <article class="image-card has-background-white-bis">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80" alt="Laptop en escritorio" />
+                <div class="content">
+                  <h3 class="title is-5">Sección 01</h3>
+                  <p class="has-text-grey-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris non tortor sit amet augue suscipit auctor.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="column is-one-third">
+              <article class="image-card has-background-white-bis">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="Equipo trabajando" />
+                <div class="content">
+                  <h3 class="title is-5">Sección 02</h3>
+                  <p class="has-text-grey-dark">Nullam faucibus, lectus vulputate tristique maximus, magna justo dignissim nibh, ac aliquet lorem sapien.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="column is-one-third">
+              <article class="image-card has-background-white-bis">
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80" alt="Reunión de trabajo" />
+                <div class="content">
+                  <h3 class="title is-5">Sección 03</h3>
+                  <p class="has-text-grey-dark">Praesent non lectus sed lorem mattis semper. Vivamus vestibulum, ligula vitae gravida lacinia, magna odio.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact-section">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Contacto</span>
+            <h2 class="title is-2 mt-4">Fichas de colaboradores</h2>
+            <p class="has-text-grey-dark">Instancias independientes con datos de contacto, empresa y foto para consultar a cada persona en un solo vistazo.</p>
+          </div>
+
+          <div class="columns is-variable is-5 mt-5 is-vcentered">
+            <div class="column is-8">
+              <div class="columns is-multiline">
+                <div class="column is-half">
+                  <article class="person-card">
+                    <div class="profile-top">
+                      <img class="person-photo" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80" alt="Camila Rivera" />
+                      <div class="meta">
+                        <h3>Camila Rivera</h3>
+                        <p>Directora de ventas</p>
+                      </div>
+                    </div>
+                    <div class="body">
+                      <ul class="contact-list">
+                        <li><span class="icon">☎</span><span>5512345678</span></li>
+                        <li><span class="icon">@</span><span>camila@lunastudio.mx</span></li>
+                        <li><span class="icon">▣</span><span>Luna Studio</span></li>
+                      </ul>
+                    </div>
+                  </article>
+                </div>
+
+                <div class="column is-half">
+                  <article class="person-card">
+                    <div class="profile-top">
+                      <img class="person-photo" src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&q=80" alt="Sofía Vega" />
+                      <div class="meta">
+                        <h3>Sofía Vega</h3>
+                        <p>Gerente de alianzas</p>
+                      </div>
+                    </div>
+                    <div class="body">
+                      <ul class="contact-list">
+                        <li><span class="icon">☎</span><span>5523456789</span></li>
+                        <li><span class="icon">@</span><span>sofia@lumaco.mx</span></li>
+                        <li><span class="icon">▣</span><span>Luma Co.</span></li>
+                      </ul>
+                    </div>
+                  </article>
+                </div>
+
+                <div class="column is-half">
+                  <article class="person-card">
+                    <div class="profile-top">
+                      <img class="person-photo" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80" alt="Ana López" />
+                      <div class="meta">
+                        <h3>Ana López</h3>
+                        <p>Coordinadora de clientes</p>
+                      </div>
+                    </div>
+                    <div class="body">
+                      <ul class="contact-list">
+                        <li><span class="icon">☎</span><span>5534567890</span></li>
+                        <li><span class="icon">@</span><span>ana@nexoideas.mx</span></li>
+                        <li><span class="icon">▣</span><span>Nexo Ideas</span></li>
+                      </ul>
+                    </div>
+                  </article>
+                </div>
+
+                <div class="column is-half">
+                  <article class="person-card">
+                    <div class="profile-top">
+                      <img class="person-photo" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80" alt="Elena Torres" />
+                      <div class="meta">
+                        <h3>Elena Torres</h3>
+                        <p>Socia estratégica</p>
+                      </div>
+                    </div>
+                    <div class="body">
+                      <ul class="contact-list">
+                        <li><span class="icon">☎</span><span>5545678901</span></li>
+                        <li><span class="icon">@</span><span>elena@northlane.mx</span></li>
+                        <li><span class="icon">▣</span><span>North Lane</span></li>
+                      </ul>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-4">
+              <aside class="digital-card">
+                <div class="brand">
+                  <div class="brand-mark">I</div>
+                  <span>Tarjeta digital</span>
+                </div>
+
+                <div class="person-header">
+                  <img class="avatar" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80" alt="Elena Torres" />
+                  <div>
+                    <h3>Elena Torres</h3>
+                    <p>Socia estratégica</p>
+                  </div>
+                </div>
+
+                <div class="info-stack">
+                  <div class="row">
+                    <div>
+                      <strong>Empresa</strong>
+                      <div>North Lane</div>
+                    </div>
+                    <div class="qr" aria-label="QR code"></div>
+                  </div>
+                  <div class="row">
+                    <div>
+                      <strong>Tel</strong>
+                      <div>5545678901</div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div>
+                      <strong>Email</strong>
+                      <div>elena@northlane.mx</div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section cta-panel">
+        <div class="container">
+          <div class="cta-box">
+            <span class="badge">Listo</span>
+            <h2 class="title is-2 mt-4">Todo encaja en una narrativa clara</h2>
+            <p class="has-text-grey-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tincidunt viverra velit, vel interdum nisl tempus non. Morbi vitae maximus nibh. In laoreet, odio non congue ultrices, nibh sem dapibus mauris, quis consectetur augue ligula et sem.</p>
+            <div class="buttons is-centered mt-5">
+              <a class="button is-primary is-rounded cta" href="#">Comenzar</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+# Archivos del sistema operativo
+Thumbs.db
+.DS_Store
+
+# Variables y secretos locales
+.env
+.env.*
+!.env.example
+
+# Dependencias y artefactos de compilación (si aplica)
+node_modules/
+dist/
+build/
